@@ -11,20 +11,28 @@ def parse_data():
             count_zero += clicks
     print(count_zero)
 
-def parse_line(line, location) -> list[int]:
+def parse_line(line, location):
+    direction = line[0]
     instruction = int(line[1:])
     clicks = 0
-    if instruction >= 100:
-        clicks = math.floor(instruction / 100)
-    if line[0] == "R":
-        new_location = location + instruction
-        while new_location > 99:
-            new_location -= 100
-        return [new_location, clicks]
-    if line[0] == "L":
-        new_location = location - instruction
-        while new_location < 0:
-            new_location += 100
-        return [new_location, clicks]
+    current_location = location
     
+    while instruction > 0:
+        if direction == "L":
+            current_location -= 1
+        elif direction == "R":
+            current_location += 1
+
+        if current_location == 100:
+            current_location = 0 
+        elif current_location == -1:
+            current_location = 99
+
+        if current_location == 0:
+            clicks += 1
+
+        instruction -= 1
+
+    return [current_location, clicks]
+
 parse_data()
