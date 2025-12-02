@@ -1,5 +1,3 @@
-import math
-
 file_path = "input.txt"
 
 def parse_data():
@@ -14,25 +12,27 @@ def parse_data():
 def parse_line(line, location):
     direction = line[0]
     instruction = int(line[1:])
+    result = []
+    clicks = instruction // 100
+    remaining_steps = instruction % 100
+
+    if direction == "L":
+        result = move_left(remaining_steps, location)
+    elif direction == "R":
+        result = move_right(remaining_steps, location)
+    clicks += result[1]
+    return [result[0], clicks]
+
+def move_left(instruction, location):
+    new_location = (location - instruction) % 100
     clicks = 0
-    current_location = location
-    
-    while instruction > 0:
-        if direction == "L":
-            current_location -= 1
-        elif direction == "R":
-            current_location += 1
+    if location > 0:
+        clicks = 0 if instruction < location else 1
+    return [new_location, clicks]
 
-        if current_location == 100:
-            current_location = 0 
-        elif current_location == -1:
-            current_location = 99
-
-        if current_location == 0:
-            clicks += 1
-
-        instruction -= 1
-
-    return [current_location, clicks]
+def move_right(instruction, location):
+    new_location = (location + instruction) % 100
+    clicks = 0 if (instruction + location < 100) else 1
+    return [new_location, clicks]
 
 parse_data()
